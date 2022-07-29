@@ -1,8 +1,8 @@
 %% Read data
 clc; clear; close all;
 G = .9201;
-load('../mNG_controls/tot_fit.mat');
-load('../mNG_controls/drift_fit_mono.mat');
+load('../mNG/tot_fit.mat');
+load('../mNG/drift_fit_mono.mat');
 
 %% hour data
 filename = 'NarXL_data_compiled.xlsx';
@@ -34,8 +34,12 @@ for z = 1:3
         rr_r(1:48,i,z) = rr_r(1:48,i,z)./tot_fit(tot);
     end
     for i = 1:12
-%         rr_r_rel(1:48,i,z) = -(rr_r(1:48,i,z)-rr_r(1:48,13,z));
-        rr_r_rel(1:48,i,z) = -(rr_r(1:48,i,z)-rr_r(1:48,1,z));
+        rr_r_rel(1:48,i,z) = -(rr_r(1:48,i,z)-rr_r(1:48,13,z));
+        
+        %This subtraction for dose-response curve
+%         rr_r_rel(1:48,i,z) = -(rr_r(1:48,i,z)-rr_r(1:48,1,z));
+
+        %This subtraction for timecourse
         rr_r_rel(1:48,i+12,z) = -(rr_r(1:48,i+12,z)-rr_r(1:48,13,z));
     end
     for i = 1:12
@@ -47,7 +51,7 @@ end
 
 % close all
 
-figure('Units', 'inches', 'Position', [0 0 8 4.91]); hold on;
+figure('Name','4B','IntegerHandle','off','Units', 'inches', 'Position', [0 0 8 4.91]); hold on;
 
 c1 = [209 227 235]/255;
 c2=[83 190 243]/255;
@@ -84,7 +88,7 @@ xlim([1E-5 1E1])
 set(gca, 'XTick', [1E-5 1E-4 1E-3 1E-2 1E-1 1 1E1])
 
 %% Time plot
-figure('Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
+figure('Name','S14A/B','IntegerHandle','off','Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
 
 c1 = [209 227 235]/255;
 c2=[83 190 243]/255;
@@ -97,13 +101,17 @@ s1=rr_r_rel(:,i+12,:);
 s1_err=rr_r(:,i+12,:);
 s2=rr_r_rel(:,i,:);
 s2_err=rr_r(:,i,:);
+
+%WT
 errorbar(time,mean(s1,3),std(s1_err,0,3),'Color','k','LineWidth',1,'LineStyle','none')
 plot(time,mean(s1,3),'Color',c1_i,'LineWidth',2)
 scatter(time,mean(s1,3),40,'Marker','o','MarkerFaceColor',c1_i,'MarkerEdgeColor','k');
-errorbar(time,mean(s2,3),std(s2_err,0,3),'Color','k','LineWidth',1,'LineStyle','none')
-errorbar(time,mean(s2,3),std(s2,0,3),'Color','k','LineWidth',1,'LineStyle','none')
-plot(time,mean(s2,3),'Color',c2_i,'LineWidth',2)
-scatter(time,mean(s2,3),40,'MarkerFaceColor',c2_i,'MarkerEdgeColor','k');
+
+%C415R
+% errorbar(time,mean(s2,3),std(s2,0,3),'Color','k','LineWidth',1,'LineStyle','none')
+% plot(time,mean(s2,3),'Color',c2_i,'LineWidth',2)
+% scatter(time,mean(s2,3),40,'Marker','o','MarkerFaceColor',c2_i,'MarkerEdgeColor','k');
+
 var = var+.1;
 count = count+1;
 end
