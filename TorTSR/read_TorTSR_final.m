@@ -2,8 +2,8 @@
 clc; clear; close all;
 
 %Load correction files
-load('../mNG_controls/tot_fit.mat');
-load('../mNG_controls/drift_fit_mono.mat');
+load('../mNG/tot_fit.mat');
+load('../mNG/drift_fit_mono.mat');
 G = .9201
 %% hour data
 filename = 'TorTSR_data_compiled.xlsx';
@@ -82,23 +82,23 @@ end
 %% total fluorescence plotting
 close all
 
-figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
-for j = 1:3
-    plot(1:12,mean(rr_tot(1:18,:,j)),'LineWidth',2)
-end
-set(gca,'YScale','log');
-grid on;
-legend()
+% figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
+% for j = 1:3
+%     plot(1:12,mean(rr_tot(1:18,:,j)),'LineWidth',2)
+% end
+% set(gca,'YScale','log');
+% grid on;
+% legend()
 
 rr_r(:,6,:) = rr_r(:,4,:);
 
-figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
-for j = 1:3
-    plot(1:11,mean(rr_tot_s(1:18,:,j)),'LineWidth',2)
-end
-set(gca,'YScale','log');
-grid on;
-legend()
+% figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
+% for j = 1:3
+%     plot(1:11,mean(rr_tot_s(1:18,:,j)),'LineWidth',2)
+% end
+% set(gca,'YScale','log');
+% grid on;
+% legend()
 
 rr_r_s(:,6,:) = rr_r_s(:,4,:);
 
@@ -106,51 +106,37 @@ rr_r_s(:,6,:) = rr_r_s(:,4,:);
 rr_r_s2(:,1,1:3) = rr_r_s(:,4,1:3);
 rr_r_s2(:,2,1:3) = rr_r_s(:,11,1:3);
 
-%% Hour timecourse plotting
-figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
-c = [1 1 1];
-j = [1:3];
-var = 1;
-%[3 0 11]
-for i = [1:4]
-    base = mean(mean(rr_r(1:2,i+1,j)),3);
-    scatter([0 time(3:16)-lag],-smooth([base; mean(rr_r(3:16,i+1,j),3)],1),20,'MarkerFaceColor',c*var,'MarkerEdgeColor','k');
-    var = var-.175;
-end
-xlabel('Time (s)','FontSize',13, 'FontName', 'Arial'); 
-ylabel('-\Deltar','FontSize',13, 'FontName', 'Arial');
-pbaspect([1,1,1]);
-grid on; box on;
-set(gca,'LineWidth',2,'FontSize',13)
-
-%% Short timecourse plotting
-figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
-c = [1 1 1];
-j = [1:3];
-var = 1;
-for i = [1:4]
-    base_s = mean(mean(rr_r_s(1:6,i,j)),3);
-    scatter([0 time_s(7:1:97)-lag_s],smooth(-[base_s; mean(rr_r_s(7:1:97,i,j),3)],1),20,'MarkerFaceColor',c*var,'MarkerEdgeColor','k');
-    var = var-.175;
-end
-xlabel('Time (s)','FontSize',13, 'FontName', 'Arial'); 
-ylabel('-\Deltar','FontSize',13, 'FontName', 'Arial');
-pbaspect([1,1,1]);
-grid on; box on;
-set(gca,'LineWidth',2,'FontSize',13)
-
 %% Short timecourse plotting (compare mNG placement)
-figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
+f1 = figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
 c = [1 1 1];
 j = [1:3];
 var = 1;
 for i = [1:2]
     base_s = mean(mean(rr_r_s2(1:6,i,j)),3);
     scatter([0 time_s(7:1:97)-lag_s],smooth(-[base_s; mean(rr_r_s2(7:1:97,i,j),3)],1),20,'MarkerFaceColor',c*var,'MarkerEdgeColor','k');
-    var = var-.175;
 end
-xlabel('Time (s)','FontSize',13, 'FontName', 'Arial'); 
-ylabel('-\Deltar','FontSize',13, 'FontName', 'Arial');
-pbaspect([1,1,1]);
-grid on; box on;
-set(gca,'LineWidth',2,'FontSize',13)
+analyze_TorTSR_shortTC_mNGplacement();close(f1);
+
+%% Hour timecourse plotting
+f1 = figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
+for i = [3 11 12]
+    base = mean(mean(rr_r(1:2,i,j)),3);
+    scatter([0 time(3:16)-lag],-smooth([base; mean(rr_r(3:16,i,j),3)],1),20,'MarkerFaceColor',c*var,'MarkerEdgeColor','k');
+end
+analyze_TorTSR_longTC_controls(rr_r);close(f1);
+%% Short timecourse plotting (inducers)
+f1 = figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
+%i = 1:4 for IPTG; [6 7 9 10] for aTc
+for i = [6 7 9 10]
+    base_s = mean(mean(rr_r_s(1:6,i,j)),3);
+    scatter([0 time_s(7:1:97)-lag_s],smooth(-[base_s; mean(rr_r_s(7:1:97,i,j),3)],1),20,'MarkerFaceColor',c*var,'MarkerEdgeColor','k');
+end
+analyze_TorTSR_shortTC_inducers();close(f1)
+%% Hour timecourse plotting (inducers)
+f1 = figure('Units', 'inches', 'Position', [0 0 6 4.82]); hold on;
+%i = 1:4 for IPTG; [6 7 9 10] for aTc
+for i = [6 7 9 10]
+    base = mean(mean(rr_r(1:2,i,j)),3);
+    scatter([0 time(3:16)-lag],-smooth([base; mean(rr_r(3:16,i,j),3)],1),20,'MarkerFaceColor',c*var,'MarkerEdgeColor','k');
+end
+analyze_TorTSR_longTC_inducers();close(f1)
