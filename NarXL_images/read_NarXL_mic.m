@@ -1,7 +1,7 @@
 clc;clear;close all;
 
 %% Read images
-strain = 'RB1172va';
+strain = 'RB1172nr';
 for i = 1:2
     for j = 1:3
         nl_ims{i}(:,:,j) = double(imread(['tiffs1/' strain '_00' num2str(i) '.tif'],'Index',j));

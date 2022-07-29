@@ -41,6 +41,7 @@ rr_tot = rr_pa+2*rr_pe;
 rr_r = (rr_pa-rr_pe)./rr_tot;
 
 %% Corrections for expression level and timecourse-drift
+%Comment out for uncorrected plots as in SI Figures S1A-B, and S2A-E
 for z = 1:3
     for i = 1:cols
         tot = rr_tot(1:18,i,z);
@@ -176,7 +177,7 @@ grid on; box on;
 set(gca,'LineWidth',2,'FontSize',16)
 legend('off')
 %% Final Plotting
-figure('Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
+figure('Name','S1C','IntegerHandle','off','Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
 c = [0 .8 0]
 for j = [1:3]
 scatter(mean(rr_tot(1,[4:10],j),3)/10000,mean(rr_r(1,[4:10],j),3),60,'MarkerEdgeColor',c,'MarkerFaceColor',c,'Marker','^')
@@ -192,7 +193,7 @@ pbaspect([1,1,1]);
 grid on; box on;
 set(gca,'LineWidth',2,'FontSize',16)
 %Time
-figure('Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
+figure('Name','S2F','IntegerHandle','off','Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
 j = [1:3];
 for i = 4:10
     c = [0 .8 0]*(i*.1);
@@ -212,27 +213,3 @@ ylabel('\itr','FontSize',16, 'FontName', 'Arial');
 pbaspect([1,1,1]);
 grid on; box on;
 set(gca,'LineWidth',2,'FontSize',16)
-
-%% WC plotting
-x1 = [0.396	0.394	0.398; 0.79	0.787	0.815];
-y1 = [0.082489017	0.084314077	0.084222755; 0.055720758	0.0566665	0.056256852];
-x2 = [0.83	0.873	0.889; 1.229	1.261	1.251];
-y2 = [0.059510874	0.058832783	0.059090891; 0.044044469	0.043086195	0.044637572];
-figure('Units', 'inches', 'Position', [0 0 8 4.725]); hold on;
-errorbar(mean(x1(1,:)),mean(y1(1,:)),std(y1(1,:)),std(y1(1,:)),std(x1(1,:)),std(x1(1,:)), ...
-    'LineWidth',2,'Color','k')
-errorbar(mean(x1(2,:)),mean(y1(2,:)),std(y1(2,:)),std(y1(2,:)),std(x1(2,:)),std(x1(2,:)), ...
-    'LineWidth',2,'Color','k')
-plot([mean(x1(1,:)) mean(x1(2,:))],[mean(y1(1,:)) mean(y1(2,:))],'k','LineWidth',2)
-errorbar(mean(x2(1,:)),mean(y2(1,:)),std(y2(1,:)),std(y2(1,:)),std(x2(1,:)),std(x2(1,:)), ...
-    'LineWidth',2,'Color','k')
-errorbar(mean(x2(2,:)),mean(y2(2,:)),std(y2(2,:)),std(y2(2,:)),std(x2(2,:)),std(x2(2,:)), ...
-    'LineWidth',2,'Color','k')
-plot([mean(x2(1,:)) mean(x2(2,:))],[mean(y2(1,:)) mean(y2(2,:))],'k','LineWidth',2)
-xlabel('OD600','FontSize',16, 'FontName', 'Arial'); 
-ylabel('r','FontSize',16, 'FontName', 'Arial');
-pbaspect([1,1,1]);
-grid on; box on;
-set(gca,'LineWidth',2,'FontSize',16)
-ylim([0 .4])
-xlim([.2 1.4])
